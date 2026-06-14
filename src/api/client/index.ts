@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
     withCredentials: true,
     headers: {
@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
                 }
 
                 const response = await axios.post(
-                    `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/auth/refresh`,
+                    `${import.meta.env.VITE_API_URL}/auth/refresh`,
                     { refreshToken }
                 )
 
@@ -55,5 +55,3 @@ apiClient.interceptors.response.use(
         return Promise.reject(error)
     }
 )
-
-export default apiClient

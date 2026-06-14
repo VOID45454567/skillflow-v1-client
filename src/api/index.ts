@@ -1,6 +1,6 @@
 import { AdminApi } from "./admin";
 import { authApi } from "./auth";
-import { axiosApp } from "./client";
+import apiClient from "./client";  // ← Импорт по умолчанию
 import { coursesApi } from "./course";
 import { OrganizationApi } from "./organization";
 import { termsApi } from "./term";
@@ -8,11 +8,11 @@ import { userApi } from "./user";
 import { userProgressApi } from "./userCourseProgress";
 
 export const API = {
-    auth: new authApi(axiosApp),
-    courses: new coursesApi(axiosApp),
-    terms: new termsApi(axiosApp),
-    users: new userApi(axiosApp),
-    admin: new AdminApi(axiosApp),
-    userProgress: new userProgressApi(axiosApp),
-    organization: new OrganizationApi(axiosApp)
+    auth: new authApi(apiClient),       // ← Используем apiClient
+    courses: new coursesApi(apiClient),
+    terms: new termsApi(apiClient),
+    users: new userApi(apiClient),
+    admin: new AdminApi(apiClient),
+    userProgress: new userProgressApi(apiClient),
+    organization: new OrganizationApi(apiClient)
 }
