@@ -34,7 +34,6 @@ export const useOrganizationStore = defineStore('organization', () => {
 
     const create = async (name: string, description: string) => {
         const result = await API.organization.create(name, description)
-        window.location.reload()
     }
 
     const uploadLogo = async (orgId: number, file: File) => {
