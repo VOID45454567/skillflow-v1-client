@@ -11,11 +11,9 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('accessToken')
-        console.log('Interceptor - token:', token) // ← Проверка
         if (token) {
             config.headers.Authorization = `Bearer ${token}`
         }
-        console.log('Interceptor - headers:', config.headers) // ← Проверка
         return config
     },
     (error) => {
@@ -29,7 +27,14 @@ apiClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config
 
+        // Если 401 и это не запрос refresh и не запрос логина
         if (error.response?.status === 401 && !originalRequest._retry) {
+
+            // Не редиректим если мы уже на логине
+            if (window.location.pathname === '/login' || window.location.pathname === '/register') {
+                return Promise.reject(error)
+            }
+
             originalRequest._retry = true
 
             try {
@@ -53,7 +58,12 @@ apiClient.interceptors.response.use(
             } catch (refreshError) {
                 localStorage.removeItem('accessToken')
                 localStorage.removeItem('refreshToken')
-                window.location.href = '/login'
+
+                // Редиректим только если мы НЕ на публичных страницах
+                const publicPages = ['/login', '/register', '/', '/home']
+                if (!publicPages.includes(window.location.pathname)) {
+                    window.location.href = '/login'
+                }
                 return Promise.reject(refreshError)
             }
         }
@@ -61,3 +71,5 @@ apiClient.interceptors.response.use(
         return Promise.reject(error)
     }
 )
+
+export default apiClient
