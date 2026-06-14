@@ -33,55 +33,57 @@ export const useAuthStore = defineStore('auth', () => {
 
     const isAuthenticated = computed(() => !!currentUser.value)
 
-    const login = async (dto: LoginUserDto) => {
-        const response = await API.auth.login(dto)
-        console.log(response?.data);
-
-        if (!response!.success) {
-
-            loginState.value.validationErorrs = response!.errors!
-            loginState.value.credencialsError = response?.error
-        }
-
-        if (response?.success && response.data.requiresTwoFactor) {
-            localStorage.setItem('2fa-userId', JSON.stringify(response.data.userId))
-            router.push({ name: 'verify-2fa' })
-            return
-        }
-
-        setCurrentUser(response?.data.user)
-
-        router.push({ name: 'profile' })
-    }
     const register = async (dto: RegisterUserDto) => {
-        try {
-            const response = await API.auth.register(dto)
-            console.log('Register store response:', response);
+        const response = await API.auth.register(dto)
 
-            if (!response?.success) {
-                registerState.value.validationErorrs = response?.errors || []
-                registerState.value.credencialsError = response?.error || ''
-                return false
-            }
-
-            const userData = response.data?.user || response.data
-
-            if (userData) {
-                setCurrentUser(userData)
-                router.push({ name: 'profile' })
-                return true
-            } else {
-                console.error('Нет данных пользователя в ответе:', response)
-                registerState.value.credencialsError = 'Не удалось получить данные пользователя'
-                return false
-            }
-        } catch (err) {
-            console.error('Необработанная ошибка при регистрации:', err)
-            registerState.value.credencialsError = 'Произошла неизвестная ошибка'
+        if (!response?.success) {
+            registerState.value.validationErorrs = response?.errors || []
+            registerState.value.credencialsError = response?.error || ''
             return false
         }
+
+        const { user, accessToken, refreshToken } = response.data
+
+        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('refreshToken', refreshToken)
+
+        setCurrentUser(user)
+        router.push({ name: 'profile' })
+        return true
     }
 
+    const login = async (dto: LoginUserDto) => {
+        const response = await API.auth.login(dto)
+
+        if (!response?.success) {
+            loginState.value.validationErorrs = response?.errors || []
+            loginState.value.credencialsError = response?.error || ''
+            return false
+        }
+
+        if (response.data.requiresTwoFactor) {
+            localStorage.setItem('2fa-userId', JSON.stringify(response.data.userId))
+            router.push({ name: 'verify-2fa' })
+            return true
+        }
+
+        const { user, accessToken, refreshToken } = response.data
+
+        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('refreshToken', refreshToken)
+
+        setCurrentUser(user)
+        router.push({ name: 'profile' })
+        return true
+    }
+
+    const logout = async () => {
+        await API.auth.logout()
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        setCurrentUser(undefined)
+        router.push({ name: 'login' })
+    }
     const getMe = async () => {
         const user = await API.auth.getMe()
         console.log('current user' + user);
@@ -125,12 +127,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     }
 
-    const logout = async () => {
-        await API.auth.logout()
-        setCurrentUser(undefined)
-
-        router.push({ name: 'login' })
-    }
 
     const uploadAvatar = async (formData: FormData) => {
         await API.auth.uploadAvatar(formData)

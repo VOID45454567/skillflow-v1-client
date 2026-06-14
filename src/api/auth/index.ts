@@ -12,22 +12,17 @@ export class authApi {
     async register(dto: RegisterUserDto) {
         try {
             const { data } = await this.axios.post(ENDPOINTS.auth.register, dto)
-            console.log('Register API response:', data);
             return { success: true, data }
         } catch (error) {
             const axiosError = error as AxiosError
-            console.error('Register API error:', axiosError.response?.data);
-
             if (axiosError.status === 422) {
                 const errors = processValidationError(axiosError)
                 return { success: false, errors }
             }
-
             if (axiosError.status === 400 || axiosError.status === 409) {
                 const errorMessage = (axiosError.response?.data as any)?.message || 'Ошибка регистрации'
                 return { success: false, error: errorMessage }
             }
-
             return { success: false, error: 'Произошла ошибка при регистрации' }
         }
     }
@@ -42,33 +37,28 @@ export class authApi {
                 const errors = processValidationError(axiosError)
                 return { success: false, errors }
             }
-
             if (axiosError.status === 400) {
-                const error = axiosError.response?.data!.message
+                const error = (axiosError.response?.data as any)?.message
                 return { success: false, error }
             }
-
         }
     }
 
     async getMe() {
         try {
             const request = await this.axios.get(ENDPOINTS.auth.getMe)
-
             return request.data as User | undefined
         } catch (error) {
             console.log(error);
         }
     }
 
-
-    async regenerateTokens() {
+    async refreshTokens(refreshToken: string) {
         try {
-            const request = await this.axios.post(ENDPOINTS.auth.refreshTokens)
-            return request
+            const request = await this.axios.post(ENDPOINTS.auth.refreshTokens, { refreshToken })
+            return request.data
         } catch (error) {
             console.log(error);
-
         }
     }
 
@@ -81,14 +71,12 @@ export class authApi {
         }
     }
 
-
     async verify2fa(code: string, userId: number) {
         try {
             const request = await this.axios.post(ENDPOINTS.auth.verify2fa, { code, userId })
             return request
         } catch (error) {
             console.log(error);
-
         }
     }
 
@@ -98,7 +86,6 @@ export class authApi {
             return request
         } catch (error) {
             console.log(error);
-
         }
     }
 
@@ -117,7 +104,6 @@ export class authApi {
             return request
         } catch (error) {
             console.log(error);
-
         }
     }
 
@@ -136,7 +122,6 @@ export class authApi {
             return request
         } catch (error) {
             console.log(error);
-
         }
     }
 }
