@@ -1,6 +1,6 @@
 import { AdminApi } from "./admin";
 import { authApi } from "./auth";
-import apiClient from "./client";  // ← Импорт по умолчанию
+import { apiClient } from "./client";
 import { coursesApi } from "./course";
 import { OrganizationApi } from "./organization";
 import { termsApi } from "./term";
