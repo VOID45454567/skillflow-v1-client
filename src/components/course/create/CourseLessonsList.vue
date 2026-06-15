@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { Layers, Plus } from 'lucide-vue'
+import { Layers, Plus } from '@lucide/vue'
 import BaseButton from '@/components/ui/AppButton.vue'
 import LessonCardEditor from './LessonCardEditor.vue'
 import type { Lesson, LessonContent } from '@/types/course/Lesson'
