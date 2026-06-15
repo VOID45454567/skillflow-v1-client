@@ -552,7 +552,10 @@ const { error: showError } = useToast()
 const coursesStore = useCoursesStore()
 
 const courses = computed(
-  () => coursesStore.courses?.filter((c) => c.visibility === CourseVisibilityTypes.PUBLISHED) || [],
+  () =>
+    coursesStore.courses?.filter(
+      (c) => c.visibility === CourseVisibilityTypes.PUBLISHED && !c.organizaionId,
+    ) || [],
 )
 const loading = ref(false)
 const searchQuery = ref('')
