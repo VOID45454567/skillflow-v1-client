@@ -225,6 +225,7 @@ export const useCoursesStore = defineStore('courses', () => {
     }
     const addReview = async (courseId: number, text: string) => {
         const response = await API.courses.makeReview(courseId, text)
+        window.location.reload()
         return response
     }
 
