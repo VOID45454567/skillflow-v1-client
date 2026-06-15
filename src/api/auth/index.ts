@@ -118,7 +118,11 @@ export class authApi {
 
     async uploadAvatar(data: FormData) {
         try {
-            const request = await this.axios.post(ENDPOINTS.auth.uploadAvatar, data)
+            const request = await this.axios.post(ENDPOINTS.auth.uploadAvatar, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+            })
             return request
         } catch (error) {
             console.log(error);
