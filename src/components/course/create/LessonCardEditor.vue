@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { Edit, BookOpen, Target, Clock, Layers, Trash2 } from 'lucide-vue'
+import { Edit, BookOpen, Target, Clock, Layers, Trash2 } from '@lucide/vue`'
 import type { Lesson, LessonContent } from '@/types/course/Lesson'
 
 interface LessonWithTemp extends Partial<Omit<Lesson, 'content'>> {
