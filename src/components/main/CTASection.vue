@@ -17,19 +17,18 @@
         </div>
         <h2 class="text-3xl font-bold text-gray-800 mb-4">Готовы начать обучение?</h2>
         <p class="text-gray-500 mb-8">
-          Присоединяйтесь к тысячам студентов и организаций, которые уже используют
-          CourseFlow
+          Присоединяйтесь к тысячам студентов и организаций, которые уже используют CourseFlow
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <button
-            @click="$emit('register')"
+            @click="goToRegister()"
             class="btn-primary px-8 py-3 rounded-xl text-white font-semibold flex items-center justify-center gap-2"
           >
             <UserPlus class="w-5 h-5" />
             Регистрация
           </button>
           <button
-            @click="$emit('login')"
+            @click="goToLogin()"
             class="glass px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-surface-hover transition-all"
           >
             <LogIn class="w-5 h-5 text-primary" />
@@ -42,10 +41,19 @@
 </template>
 
 <script setup lang="ts">
-import { Zap, UserPlus, LogIn } from "@lucide/vue";
+import router from '@/router'
+import { Zap, UserPlus, LogIn } from '@lucide/vue'
+
+const goToRegister = () => {
+  router.push({ name: 'register' })
+}
+
+const goToLogin = () => {
+  router.push({ name: 'login' })
+}
 
 defineEmits<{
-  register: [];
-  login: [];
-}>();
+  register: []
+  login: []
+}>()
 </script>

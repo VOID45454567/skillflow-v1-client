@@ -13,7 +13,7 @@
             <span
               class="text-lg font-semibold bg-gradient-to-r from-primary to-accent-pink bg-clip-text text-transparent"
             >
-              CourseFlow
+              Траектория
             </span>
           </div>
           <p class="text-sm text-gray-500 leading-relaxed">
@@ -76,55 +76,55 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { BookOpen, Send } from "@lucide/vue";
-import { useToast } from "@/composables/useToast";
-import type { Component } from "vue";
+import { ref } from 'vue'
+import { BookOpen, Send } from '@lucide/vue'
+import { useToast } from '@/composables/useToast'
+import type { Component } from 'vue'
 
 interface SocialLink {
-  name: string;
-  icon: Component;
-  url: string;
+  name: string
+  icon: Component
+  url: string
 }
 
 interface FooterLink {
-  label: string;
-  path: string;
+  label: string
+  path: string
 }
 
 interface FooterSection {
-  title: string;
-  links: FooterLink[];
+  title: string
+  links: FooterLink[]
 }
 
-const { success } = useToast();
-const email = ref<string>("");
+const { success } = useToast()
+const email = ref<string>('')
 
 const footerSections: FooterSection[] = [
   {
-    title: "Платформа",
+    title: 'Платформа',
     links: [
-      { label: "Курсы", path: "/courses" },
-      { label: "Организации", path: "/organizations" },
-      { label: "Аналитика", path: "/analytics" },
-      { label: "Сертификаты", path: "/certificates" },
+      { label: 'Курсы', path: '/courses' },
+      { label: 'Организации', path: '/organizations' },
+      { label: 'Аналитика', path: '/analytics' },
+      { label: 'Сертификаты', path: '/certificates' },
     ],
   },
   {
-    title: "Поддержка",
+    title: 'Поддержка',
     links: [
-      { label: "Документация", path: "/docs" },
-      { label: "FAQ", path: "/faq" },
-      { label: "Контакты", path: "/contacts" },
-      { label: "Статус системы", path: "/status" },
+      { label: 'Документация', path: '/docs' },
+      { label: 'FAQ', path: '/faq' },
+      { label: 'Контакты', path: '/contacts' },
+      { label: 'Статус системы', path: '/status' },
     ],
   },
-];
+]
 
 const handleSubscribe = (): void => {
   if (email.value) {
-    success("Вы подписались на рассылку");
-    email.value = "";
+    success('Вы подписались на рассылку')
+    email.value = ''
   }
-};
+}
 </script>
