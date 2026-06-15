@@ -188,13 +188,7 @@ export const useCoursesStore = defineStore('courses', () => {
     }
 
     const createCourse = async (
-        courseData: {
-            title: string
-            description: string
-            level: string
-            isFree: boolean
-            price: number
-        },
+        courseData: { title: string; description: string; level: string; isFree: boolean; price: number },
         selectedCategory: { id: number } | null,
         selectedTags: Array<{ id: number }>,
         lessons: LessonWithTemp[],
@@ -206,19 +200,13 @@ export const useCoursesStore = defineStore('courses', () => {
 
         try {
             const apiCourseData = transformCourseForApi(
-                courseData,
-                selectedCategory,
-                selectedTags,
-                lessons,
-                visibility,
-                orgId
+                courseData, selectedCategory, selectedTags, lessons, visibility, orgId
             )
 
-            console.log('📤 Creating course:', apiCourseData)
+            console.log('📤 Sending course:', JSON.stringify(apiCourseData, null, 2))
 
-            const formData = createFormData(apiCourseData)
-
-            const response = await API.courses.create(formData, orgId)
+            // Отправляем как JSON (не FormData!)
+            const response = await API.courses.create(apiCourseData)
 
             if (response?.data) {
                 currentCourse.value = response.data

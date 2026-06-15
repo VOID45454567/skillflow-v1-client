@@ -1,6 +1,7 @@
 import type { Axios, AxiosError } from "axios";
 import { ENDPOINTS } from "../endpoints";
 import type { Course } from "@/types/course";
+import { processValidationError } from "@/utils/processValidationError";
 
 export class coursesApi {
     constructor(
@@ -63,13 +64,18 @@ export class coursesApi {
         }
     }
 
-    async create(formData: FormData, orgId?: number): Promise<any> {
-        const endpoint = orgId
-            ? ENDPOINTS.organization.createCourseFromOrg(orgId)
-            : ENDPOINTS.courses.create;
-
-        const response = await this.axios.post(endpoint, formData);
-        return response;
+    async create(dto: any, orgId?: number) {
+        try {
+            const { data } = await this.axios.post(ENDPOINTS.courses.create, dto)
+            return { data }
+        } catch (error) {
+            const axiosError = error as AxiosError
+            if (axiosError.status === 422) {
+                const errors = processValidationError(axiosError)
+                return { errors }
+            }
+            throw error
+        }
     }
 
     async gift(courseId: number, giftToId: number) {
