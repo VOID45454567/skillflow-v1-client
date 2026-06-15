@@ -6,26 +6,26 @@
       @history="emit('open-payments')"
     />
 
-    <TwoFactorCard :enabled="user.enabledTwoFactor" @toggle="emit('open-2fa')" />
+    <!-- <TwoFactorCard :enabled="user.enabledTwoFactor" @toggle="emit('open-2fa')" /> -->
 
     <VerificationCard :status="user.verificationStatus" @verify="emit('verify')" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { User } from "@/types/user";
-import BalanceCard from "./BalanceCard.vue";
-import TwoFactorCard from "./TwoFactorCard.vue";
-import VerificationCard from "./VerificationCard.vue";
+import type { User } from '@/types/user'
+import BalanceCard from './BalanceCard.vue'
+import TwoFactorCard from './TwoFactorCard.vue'
+import VerificationCard from './VerificationCard.vue'
 
 defineProps<{
-  user: User;
-}>();
+  user: User
+}>()
 
 const emit = defineEmits<{
-  openBalance: [];
-  openPayments: [];
-  open2fa: [];
-  verify: [];
-}>();
+  openBalance: []
+  openPayments: []
+  open2fa: []
+  verify: []
+}>()
 </script>
