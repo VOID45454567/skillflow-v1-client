@@ -18,12 +18,18 @@
         class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4 mb-6 md:mb-8 animate-fadeInUp"
       >
         <div>
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">Организации</h1>
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
+            Организации
+          </h1>
           <p class="text-sm md:text-base text-gray-500">
             Создавайте и управляйте своими организациями
           </p>
         </div>
-        <BaseButton @click="openCreateModal" class="shadow-primary/20 w-full sm:w-auto" size="md">
+        <BaseButton
+          @click="openCreateModal"
+          class="shadow-primary/20 w-full sm:w-auto"
+          size="md"
+        >
           <Building2 class="h-4 w-4 mr-2" />
           Создать организацию
         </BaseButton>
@@ -35,9 +41,13 @@
           <div
             class="w-10 h-10 md:w-12 md:h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"
           ></div>
-          <div class="absolute inset-0 bg-primary/10 rounded-full blur-xl animate-pulse"></div>
+          <div
+            class="absolute inset-0 bg-primary/10 rounded-full blur-xl animate-pulse"
+          ></div>
         </div>
-        <p class="text-sm md:text-base text-gray-500 mt-3 md:mt-4">Загрузка организаций...</p>
+        <p class="text-sm md:text-base text-gray-500 mt-3 md:mt-4">
+          Загрузка организаций...
+        </p>
       </div>
 
       <!-- Пустое состояние -->
@@ -54,7 +64,8 @@
             Пока нет организаций
           </h2>
           <p class="text-sm md:text-base text-gray-500 mb-6 md:mb-8 max-w-md mx-auto">
-            Создайте свою первую организацию, чтобы начать управлять курсами и приглашать участников
+            Создайте свою первую организацию, чтобы начать управлять курсами и приглашать
+            участников
           </p>
           <BaseButton
             size="lg"
@@ -76,8 +87,12 @@
                 <Users class="h-5 w-5 md:h-5 md:w-5 text-primary" />
               </div>
               <div class="text-left sm:text-center">
-                <p class="text-sm md:text-sm font-medium text-gray-700 mb-0.5">Командная работа</p>
-                <p class="text-xs text-gray-400 hidden sm:block">Приглашайте участников</p>
+                <p class="text-sm md:text-sm font-medium text-gray-700 mb-0.5">
+                  Командная работа
+                </p>
+                <p class="text-xs text-gray-400 hidden sm:block">
+                  Приглашайте участников
+                </p>
               </div>
             </div>
             <div class="text-center flex sm:block items-center gap-3 sm:gap-0">
@@ -87,7 +102,9 @@
                 <BookOpen class="h-5 w-5 md:h-5 md:w-5 text-accent" />
               </div>
               <div class="text-left sm:text-center">
-                <p class="text-sm md:text-sm font-medium text-gray-700 mb-0.5">Общие курсы</p>
+                <p class="text-sm md:text-sm font-medium text-gray-700 mb-0.5">
+                  Общие курсы
+                </p>
                 <p class="text-xs text-gray-400 hidden sm:block">Создавайте вместе</p>
               </div>
             </div>
@@ -98,7 +115,9 @@
                 <Shield class="h-5 w-5 md:h-5 md:w-5 text-accent-cyan" />
               </div>
               <div class="text-left sm:text-center">
-                <p class="text-sm md:text-sm font-medium text-gray-700 mb-0.5">Безопасность</p>
+                <p class="text-sm md:text-sm font-medium text-gray-700 mb-0.5">
+                  Безопасность
+                </p>
                 <p class="text-xs text-gray-400 hidden sm:block">Контроль доступа</p>
               </div>
             </div>
@@ -120,50 +139,53 @@
       </div>
     </div>
 
-    <CreateOrganizationModal v-model="createModalOpen" @created="handleOrganizationCreated" />
+    <CreateOrganizationModal
+      v-model="createModalOpen"
+      @created="handleOrganizationCreated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { Building2, Plus, Users, BookOpen, Shield } from '@lucide/vue'
-import { useToast } from '@/composables/useToast'
-import BaseButton from '@/components/ui/AppButton.vue'
-import OrganizationCard from '@/components/organization/OrganizationCard.vue'
-import { useOrganizationStore } from '@/stores/organization'
-import CreateOrganizationModal from '@/components/modals/CreateOrganizationModal.vue'
-import { useAuthStore } from '@/stores/auth'
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import { Building2, Plus, Users, BookOpen, Shield } from "@lucide/vue";
+import { useToast } from "@/composables/useToast";
+import BaseButton from "@/components/ui/AppButton.vue";
+import OrganizationCard from "@/components/organization/OrganizationCard.vue";
+import { useOrganizationStore } from "@/stores/organization";
+import CreateOrganizationModal from "@/components/modals/CreateOrganizationModal.vue";
+import { useAuthStore } from "@/stores/auth";
 
-const router = useRouter()
-const orgStore = useOrganizationStore()
-const authStore = useAuthStore()
-const toast = useToast()
-const loading = ref(true)
-const createModalOpen = ref(false)
+const router = useRouter();
+const orgStore = useOrganizationStore();
+const authStore = useAuthStore();
+const toast = useToast();
+const loading = ref(true);
+const createModalOpen = ref(false);
 
-const allOrgs = computed(() => orgStore.allOrgs!)
+const allOrgs = computed(() => orgStore.allOrgs!);
 
 onMounted(async () => {
-  await orgStore.getAll()
-  loading.value = false
-  await authStore.getMe()
-})
+  await orgStore.getAll();
+  loading.value = false;
+  await authStore.getMe();
+});
 
-const currentUser = computed(() => authStore.currentUser!)
+const currentUser = computed(() => authStore.currentUser!);
 
 const openCreateModal = () => {
-  createModalOpen.value = true
-}
+  createModalOpen.value = true;
+};
 
 const handleOrganizationCreated = async () => {
-  toast.success('Организация успешно создана!')
-  await orgStore.getAll()
-}
+  toast.success("Организация успешно создана!");
+  await orgStore.getAll();
+};
 
 const goToOrganization = (id: number) => {
-  router.push({ name: 'single-org', params: { id } })
-}
+  router.push({ name: "single-org", params: { id } });
+};
 </script>
 
 <style scoped>

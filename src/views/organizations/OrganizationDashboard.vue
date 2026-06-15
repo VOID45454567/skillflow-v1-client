@@ -285,7 +285,7 @@ import {
   X,
   UserPlus,
   Shield,
-} from "lucide-vue";
+} from "@lucide/vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "@/composables/useToast";
 import BaseButton from "@/components/ui/AppButton.vue";
