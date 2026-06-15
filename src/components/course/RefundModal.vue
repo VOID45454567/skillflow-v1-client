@@ -4,9 +4,7 @@
       <!-- Warning Icon -->
       <div class="flex justify-center">
         <div class="relative">
-          <div
-            class="absolute inset-0 bg-rose-500/20 rounded-full blur-xl animate-pulse"
-          ></div>
+          <div class="absolute inset-0 bg-rose-500/20 rounded-full blur-xl animate-pulse"></div>
           <div
             class="relative h-16 w-16 rounded-full bg-linear-to-br from-rose-500 to-accent-pink flex items-center justify-center"
           >
@@ -33,9 +31,7 @@
 
         <div class="flex items-center justify-between pt-3 border-t border-gray-200">
           <span class="text-gray-600">Сумма возврата</span>
-          <span class="text-xl font-bold text-emerald-600">{{
-            formatPrice(refundAmount)
-          }}</span>
+          <span class="text-xl font-bold text-emerald-600">{{ formatPrice(refundAmount) }}</span>
         </div>
       </div>
 
@@ -46,8 +42,7 @@
           <div>
             <p class="font-medium text-amber-800">Прогресс будет потерян</p>
             <p class="text-sm text-amber-600 mt-1">
-              Вы прошли {{ progressPercent }}% курса. При возврате весь прогресс будет
-              удален.
+              Вы прошли {{ progressPercent }}% курса. При возврате весь прогресс будет удален.
             </p>
           </div>
         </div>
@@ -99,8 +94,8 @@
           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary/20"
         />
         <span class="text-sm text-gray-600">
-          Я понимаю, что при возврате курса я потеряю доступ к материалам, а весь прогресс
-          будет удален без возможности восстановления
+          Я понимаю, что при возврате курса я потеряю доступ к материалам, а весь прогресс будет
+          удален без возможности восстановления
         </span>
       </label>
 
@@ -123,77 +118,76 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { RotateCcw, AlertCircle, Loader } from "@lucide/vue";
-import AppButton from "@/components/ui/AppButton.vue";
-import Modal from "../common/Modal.vue";
+import { ref, computed, watch } from 'vue'
+import { RotateCcw, AlertCircle, Loader } from '@lucide/vue'
+import AppButton from '@/components/ui/AppButton.vue'
+import Modal from '../common/Modal.vue'
 const props = defineProps<{
-  modelValue: boolean;
-  courseTitle?: string;
-  price?: number;
-  hasProgress?: boolean;
-  progressPercent?: number;
-}>();
+  modelValue: boolean
+  courseTitle?: string
+  price?: number
+  hasProgress?: boolean
+  progressPercent?: number
+}>()
 
 const emit = defineEmits<{
-  "update:modelValue": [value: boolean];
-  confirm: [data: { reason?: string }];
-}>();
+  'update:modelValue': [value: boolean]
+  confirm: [data: { reason?: string }]
+}>()
 
-const selectedReason = ref<string | null>(null);
-const customReason = ref("");
-const confirmed = ref(false);
-const isProcessing = ref(false);
+const selectedReason = ref<string | null>(null)
+const customReason = ref('')
+const confirmed = ref(false)
+const isProcessing = ref(false)
 
 const refundReasons = [
-  "Курс не соответствует описанию",
-  "Слишком сложный материал",
-  "Слишком простой материал",
-  "Купил по ошибке",
-  "Передумал",
-  "Другое",
-];
+  'Курс не соответствует описанию',
+  'Слишком сложный материал',
+  'Слишком простой материал',
+  'Купил по ошибке',
+  'Передумал',
+  'Другое',
+]
 
 const refundAmount = computed(() => {
   // Можно добавить логику частичного возврата в зависимости от прогресса
-  return props.price || 0;
-});
+  return props.price || 0
+})
 
 async function handleRefund() {
-  isProcessing.value = true;
+  isProcessing.value = true
 
   // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  await new Promise((resolve) => setTimeout(resolve, 1500))
 
-  const reason =
-    selectedReason.value === "Другое" ? customReason.value : selectedReason.value;
-  emit("confirm", { reason: reason || undefined });
+  const reason = selectedReason.value === 'Другое' ? customReason.value : selectedReason.value
+  emit('confirm', { reason: reason || undefined })
 
-  isProcessing.value = false;
-  close();
+  isProcessing.value = false
+  close()
 }
 
 function close() {
-  emit("update:modelValue", false);
-  selectedReason.value = null;
-  customReason.value = "";
-  confirmed.value = false;
-  isProcessing.value = false;
+  emit('update:modelValue', false)
+  selectedReason.value = null
+  customReason.value = ''
+  confirmed.value = false
+  isProcessing.value = false
 }
 
 function formatPrice(price?: number): string {
-  if (!price && price !== 0) return "0 💎";
-  return `${price} 💎`;
+  if (!price && price !== 0) return '0 р'
+  return `${price} р`
 }
 
 watch(
   () => props.modelValue,
   (val) => {
     if (!val) {
-      close();
+      close()
     }
-  }
-);
+  },
+)
 </script>
 
 <style scoped>

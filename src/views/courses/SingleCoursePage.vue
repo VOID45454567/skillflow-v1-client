@@ -256,7 +256,7 @@
                         class="text-xs md:text-sm flex-1 sm:flex-none"
                       >
                         <ShoppingCart class="h-3.5 w-3.5 md:h-5 md:w-5" />
-                        Купить за {{ course.price }} 💎
+                        Купить за {{ course.price }} р
                       </AppButton>
 
                       <AppButton
@@ -1004,7 +1004,7 @@ async function handleSetPrice(price: number) {
     course.value.price = price
     isSetPriceModalOpen.value = false
 
-    toast.success(`Курс стал платным! Цена: ${price} 💎`)
+    toast.success(`Курс стал платным! Цена: ${price} р`)
   } catch (error) {
     console.error('Error setting course price:', error)
     toast.error('Не удалось установить цену. Попробуйте позже.')

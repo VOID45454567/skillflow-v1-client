@@ -89,7 +89,7 @@
                 </span>
               </td>
               <td class="px-6 py-4">
-                <span class="text-sm font-medium text-emerald-600"> +{{ payment.count }} 💎 </span>
+                <span class="text-sm font-medium text-emerald-600"> +{{ payment.count }} р </span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-500">
                 {{ formatDate(payment.createdAt) }}

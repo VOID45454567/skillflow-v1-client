@@ -32,21 +32,15 @@
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                 Пользователь
               </th>
-              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Роль
-              </th>
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Роль</th>
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                 Статус
               </th>
               <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                 Баланс
               </th>
-              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                2FA
-              </th>
-              <th
-                class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase"
-              >
+              <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">2FA</th>
+              <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase">
                 Действия
               </th>
             </tr>
@@ -78,7 +72,7 @@
                       : 'bg-gray-100 text-gray-700'
                   "
                 >
-                  {{ user.role === "ADMIN" ? "Админ" : "Пользователь" }}
+                  {{ user.role === 'ADMIN' ? 'Админ' : 'Пользователь' }}
                 </span>
               </td>
               <td class="px-6 py-4">
@@ -98,9 +92,7 @@
                   </span>
                 </div>
               </td>
-              <td class="px-6 py-4 text-sm font-medium text-gray-700">
-                {{ user.balance }} 💎
-              </td>
+              <td class="px-6 py-4 text-sm font-medium text-gray-700">{{ user.balance }} р</td>
               <td class="px-6 py-4">
                 <span
                   class="px-2 py-1 rounded-full text-xs font-medium"
@@ -110,7 +102,7 @@
                       : 'bg-gray-100 text-gray-600'
                   "
                 >
-                  {{ user.enabledTwoFactor ? "Включена" : "Отключена" }}
+                  {{ user.enabledTwoFactor ? 'Включена' : 'Отключена' }}
                 </span>
               </td>
               <td class="px-6 py-4 text-right">
@@ -161,111 +153,110 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from "vue";
-import { Search, Eye, Ban, CheckCircle } from "@lucide/vue";
-import { useAdminStore } from "@/stores/admin";
-import { useToast } from "@/composables/useToast";
-import { UserVerificationStatuses } from "@/types/enums/verification-statuses";
-import BaseButton from "@/components/ui/AppButton.vue";
-import UserDetailsModal from "../modals/UserDetailsModal.vue";
-import ConfirmModal from "@/components/modals/ConfirmModal.vue";
-import type { User } from "@/types/user";
+import { ref, computed, reactive } from 'vue'
+import { Search, Eye, Ban, CheckCircle } from '@lucide/vue'
+import { useAdminStore } from '@/stores/admin'
+import { useToast } from '@/composables/useToast'
+import { UserVerificationStatuses } from '@/types/enums/verification-statuses'
+import BaseButton from '@/components/ui/AppButton.vue'
+import UserDetailsModal from '../modals/UserDetailsModal.vue'
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
+import type { User } from '@/types/user'
 
-const store = useAdminStore();
-const toast = useToast();
+const store = useAdminStore()
+const toast = useToast()
 
-const searchQuery = ref("");
-const filterStatus = ref<"all" | "blocked" | "active" | "verified">("all");
-const selectedUser = ref<User | null>(null);
+const searchQuery = ref('')
+const filterStatus = ref<'all' | 'blocked' | 'active' | 'verified'>('all')
+const selectedUser = ref<User | null>(null)
 
 const confirmModal = reactive({
   show: false,
-  title: "",
-  message: "",
-  type: "info" as "warning" | "info" | "danger" | "success",
-  confirmText: "Подтвердить",
+  title: '',
+  message: '',
+  type: 'info' as 'warning' | 'info' | 'danger' | 'success',
+  confirmText: 'Подтвердить',
   requireReason: false,
-  reasonPlaceholder: "",
+  reasonPlaceholder: '',
   onConfirm: (_reason: string) => {},
-});
+})
 
 const filteredUsers = computed(() => {
-  let users = [...store.users];
+  let users = [...store.users]
 
-  if (filterStatus.value === "blocked") {
-    users = users.filter((u) => u.bannedByUsers?.length > 0);
-  } else if (filterStatus.value === "active") {
-    users = users.filter((u) => !u.bannedByUsers?.length);
-  } else if (filterStatus.value === "verified") {
-    users = users.filter((u) => u.verificationStatus === "VERIFIED");
+  if (filterStatus.value === 'blocked') {
+    users = users.filter((u) => u.bannedByUsers?.length > 0)
+  } else if (filterStatus.value === 'active') {
+    users = users.filter((u) => !u.bannedByUsers?.length)
+  } else if (filterStatus.value === 'verified') {
+    users = users.filter((u) => u.verificationStatus === 'VERIFIED')
   }
 
   if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase();
+    const query = searchQuery.value.toLowerCase()
     users = users.filter(
-      (u) =>
-        u.login.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)
-    );
+      (u) => u.login.toLowerCase().includes(query) || u.email.toLowerCase().includes(query),
+    )
   }
 
-  return users;
-});
+  return users
+})
 
 const getVerificationClass = (status: UserVerificationStatuses): string => {
   const classes: Record<UserVerificationStatuses, string> = {
-    VERIFIED: "bg-emerald-100 text-emerald-700",
-    PENDING: "bg-amber-100 text-amber-700",
-    REJECTED: "bg-rose-100 text-rose-700",
-    UNVERIFIED: "bg-gray-100 text-gray-600",
-  };
-  return classes[status] || "bg-gray-100 text-gray-600";
-};
+    VERIFIED: 'bg-emerald-100 text-emerald-700',
+    PENDING: 'bg-amber-100 text-amber-700',
+    REJECTED: 'bg-rose-100 text-rose-700',
+    UNVERIFIED: 'bg-gray-100 text-gray-600',
+  }
+  return classes[status] || 'bg-gray-100 text-gray-600'
+}
 
 const mapVerificationStatus = (status: UserVerificationStatuses): string => {
   const map: Record<UserVerificationStatuses, string> = {
-    VERIFIED: "Верифицирован",
-    PENDING: "На проверке",
-    REJECTED: "Отклонен",
-    UNVERIFIED: "Не верифицирован",
-  };
-  return map[status] || status;
-};
+    VERIFIED: 'Верифицирован',
+    PENDING: 'На проверке',
+    REJECTED: 'Отклонен',
+    UNVERIFIED: 'Не верифицирован',
+  }
+  return map[status] || status
+}
 
 const openBlockModal = (user: User) => {
-  confirmModal.show = true;
-  confirmModal.title = "Блокировка пользователя";
-  confirmModal.message = `Вы уверены, что хотите заблокировать пользователя "${user.login}"?`;
-  confirmModal.type = "danger";
-  confirmModal.confirmText = "Заблокировать";
-  confirmModal.requireReason = true;
-  confirmModal.reasonPlaceholder = "Укажите причину блокировки...";
+  confirmModal.show = true
+  confirmModal.title = 'Блокировка пользователя'
+  confirmModal.message = `Вы уверены, что хотите заблокировать пользователя "${user.login}"?`
+  confirmModal.type = 'danger'
+  confirmModal.confirmText = 'Заблокировать'
+  confirmModal.requireReason = true
+  confirmModal.reasonPlaceholder = 'Укажите причину блокировки...'
   confirmModal.onConfirm = async (reason: string) => {
-    const success = await store.blockUser(user.id, reason!);
+    const success = await store.blockUser(user.id, reason!)
     if (success) {
-      toast.success(`Пользователь ${user.login} заблокирован`);
+      toast.success(`Пользователь ${user.login} заблокирован`)
     } else {
-      toast.error("Ошибка блокировки");
+      toast.error('Ошибка блокировки')
     }
-    confirmModal.show = false;
-  };
-};
+    confirmModal.show = false
+  }
+}
 
 const openUnblockModal = (user: User) => {
-  confirmModal.show = true;
-  confirmModal.title = "Разблокировка пользователя";
-  confirmModal.message = `Вы уверены, что хотите разблокировать пользователя "${user.login}"?`;
-  confirmModal.type = "success";
-  confirmModal.confirmText = "Разблокировать";
-  confirmModal.requireReason = true;
-  confirmModal.reasonPlaceholder = "Укажите причину разблокировки...";
+  confirmModal.show = true
+  confirmModal.title = 'Разблокировка пользователя'
+  confirmModal.message = `Вы уверены, что хотите разблокировать пользователя "${user.login}"?`
+  confirmModal.type = 'success'
+  confirmModal.confirmText = 'Разблокировать'
+  confirmModal.requireReason = true
+  confirmModal.reasonPlaceholder = 'Укажите причину разблокировки...'
   confirmModal.onConfirm = async (reason?: string) => {
-    const success = await store.unblockUser(user.id, reason!);
+    const success = await store.unblockUser(user.id, reason!)
     if (success) {
-      toast.success(`Пользователь ${user.login} разблокирован`);
+      toast.success(`Пользователь ${user.login} разблокирован`)
     } else {
-      toast.error("Ошибка разблокировки");
+      toast.error('Ошибка разблокировки')
     }
-    confirmModal.show = false;
-  };
-};
+    confirmModal.show = false
+  }
+}
 </script>

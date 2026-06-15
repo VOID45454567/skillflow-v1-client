@@ -20,9 +20,7 @@
       <div class="glass rounded-xl p-4">
         <div class="flex items-center justify-between mb-3">
           <span class="text-gray-600">Стоимость курса</span>
-          <span class="text-xl font-bold text-primary">{{
-            formatPrice(course?.price)
-          }}</span>
+          <span class="text-xl font-bold text-primary">{{ formatPrice(course?.price) }}</span>
         </div>
         <div class="flex items-center justify-between pt-3 border-t border-gray-200">
           <span class="text-gray-600">Ваш баланс</span>
@@ -36,10 +34,7 @@
       </div>
 
       <!-- Insufficient Balance Warning -->
-      <div
-        v-if="!hasEnoughBalance"
-        class="p-4 bg-amber-50 rounded-xl border border-amber-200"
-      >
+      <div v-if="!hasEnoughBalance" class="p-4 bg-amber-50 rounded-xl border border-amber-200">
         <div class="flex items-start gap-3">
           <AlertCircle class="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
           <div>
@@ -54,10 +49,7 @@
       <!-- Payment Methods -->
 
       <!-- Success State -->
-      <div
-        v-if="purchaseSuccess"
-        class="p-4 bg-emerald-50 rounded-xl border border-emerald-200"
-      >
+      <div v-if="purchaseSuccess" class="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
         <div class="flex items-start gap-3">
           <CheckCircle class="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
           <div>
@@ -79,7 +71,7 @@
         >
           <Loader v-if="isProcessing" class="h-4 w-4 mr-2 animate-spin" />
           <ShoppingCart v-else class="h-4 w-4 mr-2" />
-          {{ "Купить" }}
+          {{ 'Купить' }}
         </AppButton>
 
         <AppButton v-else class="flex-1" @click="goToLearning">
@@ -94,93 +86,86 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { useRouter } from "vue-router";
-import {
-  BookOpen,
-  ShoppingCart,
-  AlertCircle,
-  CheckCircle,
-  Loader,
-  PlayCircle,
-} from "@lucide/vue";
-import AppButton from "@/components/ui/AppButton.vue";
-import { useToast } from "@/composables/useToast";
-import Modal from "@/components/common/Modal.vue";
-const toast = useToast();
+import { ref, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { BookOpen, ShoppingCart, AlertCircle, CheckCircle, Loader, PlayCircle } from '@lucide/vue'
+import AppButton from '@/components/ui/AppButton.vue'
+import { useToast } from '@/composables/useToast'
+import Modal from '@/components/common/Modal.vue'
+const toast = useToast()
 const props = defineProps<{
-  modelValue: boolean;
-  course: any;
-  currentBalance?: number;
-}>();
+  modelValue: boolean
+  course: any
+  currentBalance?: number
+}>()
 
 const emit = defineEmits<{
-  "update:modelValue": [value: boolean];
-  confirm: [data: { courseId: number; topUpAmount?: number }];
-}>();
+  'update:modelValue': [value: boolean]
+  confirm: [data: { courseId: number; topUpAmount?: number }]
+}>()
 
-const router = useRouter();
+const router = useRouter()
 
-const selectedTopUpAmount = ref<number | null>(null);
-const isProcessing = ref(false);
-const purchaseSuccess = ref(false);
+const selectedTopUpAmount = ref<number | null>(null)
+const isProcessing = ref(false)
+const purchaseSuccess = ref(false)
 
 const hasEnoughBalance = computed(() => {
-  return (props.currentBalance || 0) >= (props.course?.price || 0);
-});
+  return (props.currentBalance || 0) >= (props.course?.price || 0)
+})
 
 const requiredAmount = computed(() => {
-  return (props.course?.price || 0) - (props.currentBalance || 0);
-});
+  return (props.course?.price || 0) - (props.currentBalance || 0)
+})
 
 async function handlePurchase() {
   if (!hasEnoughBalance.value) {
-    close();
-    toast.error("Недостаточно средств. Пополните баланс в профиле.");
+    close()
+    toast.error('Недостаточно средств. Пополните баланс в профиле.')
   }
 
-  if (!props.course?.id) return;
+  if (!props.course?.id) return
 
-  isProcessing.value = true;
+  isProcessing.value = true
 
-  emit("confirm", {
+  emit('confirm', {
     courseId: props.course.id,
-  });
+  })
 
   setTimeout(() => {
-    isProcessing.value = false;
-  }, 500);
+    isProcessing.value = false
+  }, 500)
 }
 function goToLearning() {
-  close();
-  router.push({ name: "course-learning", params: { id: props.course?.id } });
+  close()
+  router.push({ name: 'course-learning', params: { id: props.course?.id } })
 }
 
 function goToBalance() {
-  close();
-  router.push({ name: "profile", query: { action: "balance" } });
+  close()
+  router.push({ name: 'profile', query: { action: 'balance' } })
 }
 
 function close() {
-  emit("update:modelValue", false);
-  selectedTopUpAmount.value = null;
-  purchaseSuccess.value = false;
-  isProcessing.value = false;
+  emit('update:modelValue', false)
+  selectedTopUpAmount.value = null
+  purchaseSuccess.value = false
+  isProcessing.value = false
 }
 
 function formatPrice(price?: number): string {
-  if (!price && price !== 0) return "0 💎";
-  return `${price} 💎`;
+  if (!price && price !== 0) return '0 р'
+  return `${price} р`
 }
 
 watch(
   () => props.modelValue,
   (val) => {
     if (!val) {
-      close();
+      close()
     }
-  }
-);
+  },
+)
 </script>
 
 <style scoped>
