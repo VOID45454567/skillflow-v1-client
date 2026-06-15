@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Mail, Upload, User as UserIcon } from "lucide-vue";
+import { Mail, Upload, User as UserIcon } from "@lucide/vue";
 import type { User } from "@/types/user";
 
 const props = defineProps<{
